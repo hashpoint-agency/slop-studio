@@ -1,9 +1,10 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 button { outline:none; }
+html { height:100%; overflow:hidden; }
 body {
   background:#0f0f0f; color:#ddd;
   font-family:'Courier New',monospace;
-  display:flex; height:100vh; overflow:hidden;
+  display:flex; height:100%; overflow:hidden;
   user-select:none; -webkit-user-select:none;
 }
 
