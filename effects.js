@@ -43,7 +43,7 @@ const BAYER_MX = {
 };
 function quantLum(v,levels){const step=255/(levels-1);return Math.round(clamp(Math.round(v/step),0,levels-1)*step);}
 
-function makeBlockGrid(data,W,H,blocks,ps){
+function makeBlockGrid(srcData,W,H,blocks,ps){
   let gx0=Infinity,gy0=Infinity,gx1=-Infinity,gy1=-Infinity;
   blocks.forEach(({bx,by})=>{
     const gx=bx/ps,gy=by/ps;
@@ -54,7 +54,7 @@ function makeBlockGrid(data,W,H,blocks,ps){
   const mask=new Uint8Array(GW*GH);
   blocks.forEach(({bx,by})=>{
     const gx=bx/ps-gx0,gy=by/ps-gy0;
-    const[r,g,b]=avgBlock(data,W,H,bx,by,ps);
+    const[r,g,b]=avgBlock(srcData,W,H,bx,by,ps);
     lums[gy*GW+gx]=0.299*r+0.587*g+0.114*b;
     mask[gy*GW+gx]=1;
   });
@@ -263,9 +263,10 @@ const FX = {
     const mSz=bayerSize;
     const mMax=mSz*mSz;
     const step=255/(levels-1);
+    const src=origData||data;
     blocks.forEach(({bx,by})=>{
       const gx=Math.round(bx/ps), gy=Math.round(by/ps);
-      const[r,g,b]=avgBlock(data,W,H,bx,by,ps);
+      const[r,g,b]=avgBlock(src,W,H,bx,by,ps);
       const lum=0.299*r+0.587*g+0.114*b+(thr-127);
       const sig=(mx[gy%mSz][gx%mSz]/mMax-.5)*step+(Math.random()-.5)*chaos*step*.8;
       const qLum=quantLum(lum+sig,levels);
@@ -279,7 +280,7 @@ const FX = {
     const levels=val('levels');
     const chaos=val('chaos')/100;
     const step=255/(levels-1);
-    const{gx0,gy0,GW,GH,lums,mask}=makeBlockGrid(data,W,H,blocks,ps);
+    const{gx0,gy0,GW,GH,lums,mask}=makeBlockGrid(origData||data,W,H,blocks,ps);
     for(let i=0;i<lums.length;i++)if(mask[i])lums[i]+=(thr-127)+(Math.random()-.5)*chaos*step*.5;
     for(let gy=0;gy<GH;gy++){
       for(let gx=0;gx<GW;gx++){
@@ -308,7 +309,7 @@ const FX = {
     const levels=val('levels');
     const chaos=val('chaos')/100;
     const step=255/(levels-1);
-    const{gx0,gy0,GW,GH,lums,mask}=makeBlockGrid(data,W,H,blocks,ps);
+    const{gx0,gy0,GW,GH,lums,mask}=makeBlockGrid(origData||data,W,H,blocks,ps);
     for(let i=0;i<lums.length;i++)if(mask[i])lums[i]+=(thr-127)+(Math.random()-.5)*chaos*step*.4;
     for(let gy=0;gy<GH;gy++){
       for(let gx=0;gx<GW;gx++){
@@ -333,8 +334,9 @@ const FX = {
     const levels=val('levels');
     const chaos=val('chaos')/100;
     const half=ps/2;
+    const src=origData||data;
     blocks.forEach(({bx,by})=>{
-      const[r,g,b]=avgBlock(data,W,H,bx,by,ps);
+      const[r,g,b]=avgBlock(src,W,H,bx,by,ps);
       const lum=clamp(0.299*r+0.587*g+0.114*b+(thr-127),0,255);
       const darkness=1-lum/255;
       const qDark=quantLum(darkness*255,levels)/255;

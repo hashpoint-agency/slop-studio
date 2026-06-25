@@ -123,6 +123,7 @@ Object.entries(SL).forEach(([, [sid, vid]]) => {
   if (sl && vd) sl.addEventListener('input', () => { vd.textContent = sl.value; });
 });
 let brushOverride = null;
+let brushShape    = 'circle';
 
 // ── View transform (pan + zoom) ───────────────────────────────────────
 function updateTransform() {
@@ -173,6 +174,16 @@ document.getElementById('fullBrushBtn').addEventListener('click', () => {
     brushOverride = diag;
     btn.style.color = '#fff'; btn.style.borderColor = '#fff';
   }
+});
+document.getElementById('brushCircle').addEventListener('click',()=>{
+  brushShape='circle'; brushC.style.borderRadius='50%';
+  document.getElementById('brushCircle').classList.add('active');
+  document.getElementById('brushSquare').classList.remove('active');
+});
+document.getElementById('brushSquare').addEventListener('click',()=>{
+  brushShape='square'; brushC.style.borderRadius='0';
+  document.getElementById('brushSquare').classList.add('active');
+  document.getElementById('brushCircle').classList.remove('active');
 });
 (function init() { const r = val('brush'); brushC.style.width = Math.round(r*viewZoom)+'px'; brushC.style.height = Math.round(r*viewZoom)+'px'; })();
 
@@ -414,7 +425,8 @@ function applyAt(cx,cy){
   const blocks=[];
   for(let by=y0;by<y1;by+=ps)for(let bx=x0;bx<x1;bx+=ps){
     const bcx=bx+ps/2,bcy=by+ps/2,dx=bcx-cx,dy=bcy-cy;
-    if(dx*dx+dy*dy<=R*R)blocks.push({bx,by});
+    const hit=brushShape==='square'?Math.abs(dx)<=R&&Math.abs(dy)<=R:dx*dx+dy*dy<=R*R;
+    if(hit)blocks.push({bx,by});
   }
   if(!blocks.length)return;
 
