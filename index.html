@@ -42,6 +42,7 @@
       <button class="effect-btn" data-effect="colorBlock">Color Block</button>
       <button class="effect-btn" data-effect="mosaic">Mosaic</button>
       <button class="effect-btn" data-effect="corrupt">Corrupt</button>
+      <button class="effect-btn" data-effect="paint">Paint</button>
       <button class="effect-btn" data-effect="erase">Restore</button>
       <button class="effect-btn" data-effect="colorErase" style="grid-column:span 2">Clr Erase ✦ click to pick &amp; erase</button>
     </div>
@@ -114,6 +115,10 @@
         <button class="mini-btn active" data-bayer="4">4×4</button>
         <button class="mini-btn" data-bayer="8">8×8</button>
       </div>
+    </div>
+    <div class="ctrl" data-ctrl="softness">
+      <div class="ctrl-label">Softness <em id="vSoftness">50</em>%</div>
+      <input type="range" id="sSoftness" min="0" max="100" value="50">
     </div>
     <div class="ctrl" data-ctrl="tolerance">
       <div class="ctrl-label">Tolerance <em id="vTolerance">30</em></div>

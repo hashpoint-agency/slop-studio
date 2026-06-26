@@ -82,6 +82,7 @@ const ECTRL = {
   colorBlock:  ['brush','pixel','intensity','chaos','blend','density'],
   mosaic:      ['brush','pixel','chaos','blend'],
   corrupt:     ['brush','pixel','intensity','chaos','blend','streak','density'],
+  paint:       ['brush','softness'],
   erase:       ['brush'],
   colorErase:  ['tolerance'],
   ditherBayer: ['brush','dcell','threshold','levels','chaos','blend','bayerMx','ditherSrc'],
@@ -115,6 +116,7 @@ const SL = {
   spread:    ['sSpread',   'vSpread'],
   levels:    ['sLevels',   'vLevels'],
   tolerance: ['sTolerance','vTolerance'],
+  softness:  ['sSoftness', 'vSoftness'],
 };
 function val(k) { return parseInt(document.getElementById(SL[k][0]).value); }
 function brushPx() {
@@ -439,6 +441,34 @@ function applyAt(cx,cy){
   if(!workData)return;
   if(activeEffect==='colorErase'){
     if(lastPt===null) doColorErase(cx,cy);
+    return;
+  }
+  if(activeEffect==='paint'){
+    const W=canvas.width,H=canvas.height;
+    const R=brushPx()/2;
+    if(!R)return;
+    const[pr,pg,pb]=c1rgb();
+    const baseA=c1Transp?0:c1Alpha/255;
+    const hardness=1-val('softness')/100;
+    const data=workData.data;
+    const x0=Math.max(0,Math.floor(cx-R));
+    const y0=Math.max(0,Math.floor(cy-R));
+    const x1=Math.min(W-1,Math.ceil(cx+R));
+    const y1=Math.min(H-1,Math.ceil(cy+R));
+    for(let py=y0;py<=y1;py++){
+      for(let px=x0;px<=x1;px++){
+        const dx=px+0.5-cx,dy=py+0.5-cy;
+        const t=brushShape==='square'?Math.max(Math.abs(dx),Math.abs(dy))/R:Math.sqrt(dx*dx+dy*dy)/R;
+        if(t>1)continue;
+        const a=t<=hardness?baseA:(1-(t-hardness)/(1-hardness+1e-6))*baseA;
+        if(a<=0)continue;
+        const i=(py*W+px)*4;
+        data[i]  =Math.round(data[i]  +(pr-data[i]  )*a);
+        data[i+1]=Math.round(data[i+1]+(pg-data[i+1])*a);
+        data[i+2]=Math.round(data[i+2]+(pb-data[i+2])*a);
+      }
+    }
+    ctx.putImageData(workData,0,0);
     return;
   }
   const W=canvas.width,H=canvas.height;
