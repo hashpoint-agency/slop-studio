@@ -692,6 +692,63 @@ document.addEventListener('keyup',e=>{
   if(e.key===' '){spaceDown=false;isPanning=false;canvas.style.cursor='none';brushC.style.display='block';}
 });
 
+// ── New Canvas modal ─────────────────────────────────────────────────
+(function(){
+  const overlay = document.getElementById('nc-overlay');
+  const picker  = document.getElementById('ncBgPicker');
+  const hexIn   = document.getElementById('ncBgHex');
+  const transpBtn = document.getElementById('ncTranspBtn');
+  let ncTransp = false;
+
+  function openModal(){ overlay.classList.remove('hidden'); }
+  function closeModal(){ overlay.classList.add('hidden'); }
+
+  document.getElementById('ncOpenBtn').addEventListener('click', openModal);
+  document.getElementById('ncCancel').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if(e.target===overlay) closeModal(); });
+
+  picker.addEventListener('input', () => {
+    hexIn.value = picker.value.replace('#','').toUpperCase();
+    ncTransp = false; transpBtn.classList.remove('active');
+  });
+  hexIn.addEventListener('input', () => {
+    if(/^[0-9a-fA-F]{6}$/.test(hexIn.value)) picker.value = '#'+hexIn.value;
+    ncTransp = false; transpBtn.classList.remove('active');
+  });
+  transpBtn.addEventListener('click', () => {
+    ncTransp = !ncTransp;
+    transpBtn.classList.toggle('active', ncTransp);
+  });
+
+  document.querySelectorAll('[data-ncsize]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const [w,h] = btn.dataset.ncsize.split('x').map(Number);
+      document.getElementById('ncW').value = w;
+      document.getElementById('ncH').value = h;
+    });
+  });
+
+  document.getElementById('ncCreate').addEventListener('click', () => {
+    const w = Math.max(1, Math.min(8000, parseInt(document.getElementById('ncW').value)||800));
+    const h = Math.max(1, Math.min(8000, parseInt(document.getElementById('ncH').value)||600));
+    canvas.width = w; canvas.height = h;
+    ctx.clearRect(0,0,w,h);
+    if(!ncTransp){
+      ctx.fillStyle = '#'+hexIn.value;
+      ctx.fillRect(0,0,w,h);
+    }
+    const id = ctx.getImageData(0,0,w,h);
+    origData = new Uint8ClampedArray(id.data);
+    workData = id; undoStack = []; redoStack = [];
+    updateUndoLabel();
+    dropZ.style.display = 'none'; canvas.style.display = 'block';
+    document.getElementById('tSize').textContent = `${w}×${h}`;
+    updateExpSizeLabel();
+    centerCanvas();
+    closeModal();
+  });
+})();
+
 // ── Zoom button + presets ─────────────────────────────────────────────
 const zoomBtn  = document.getElementById('zoomBtn');
 const zoomMenu = document.getElementById('zoom-menu');

@@ -22,6 +22,7 @@
   <div>
     <div class="slabel">Source</div>
     <button class="upload-btn" onclick="document.getElementById('fileIn').click()">+ Upload Image</button>
+    <button class="upload-btn upload-btn-sec" id="ncOpenBtn">+ New Canvas</button>
     <input type="file" id="fileIn" accept="image/*" style="display:none">
   </div>
 
@@ -299,6 +300,37 @@
   <div id="canvas-wrap">
     <div id="drop-zone"><div class="drop-cross"></div><div>Drop or upload an image</div></div>
     <canvas id="canvas"></canvas>
+  </div>
+</div>
+
+<!-- ══ NEW CANVAS MODAL ══ -->
+<div id="nc-overlay" class="hidden">
+  <div id="nc-modal">
+    <div class="nc-title">New Canvas</div>
+    <div class="nc-section-label">Dimensions</div>
+    <div class="nc-dims">
+      <input type="number" id="ncW" value="800" min="1" max="8000">
+      <span class="nc-x">×</span>
+      <input type="number" id="ncH" value="600" min="1" max="8000">
+      <span class="nc-unit">px</span>
+    </div>
+    <div class="mini-row" style="margin-bottom:16px">
+      <button class="mini-btn" data-ncsize="800x600">800×600</button>
+      <button class="mini-btn" data-ncsize="1080x1080">1080²</button>
+      <button class="mini-btn" data-ncsize="1920x1080">FHD</button>
+      <button class="mini-btn" data-ncsize="2560x1440">2K</button>
+    </div>
+    <div class="nc-section-label">Background</div>
+    <div class="nc-bg">
+      <input type="color" id="ncBgPicker" value="#ffffff">
+      <span class="nc-hash">#</span>
+      <input type="text" id="ncBgHex" maxlength="6" value="FFFFFF" spellcheck="false">
+      <button class="mini-btn" id="ncTranspBtn">Transparent</button>
+    </div>
+    <div class="nc-actions">
+      <button id="ncCancel">Cancel</button>
+      <button id="ncCreate">Create</button>
+    </div>
   </div>
 </div>
 

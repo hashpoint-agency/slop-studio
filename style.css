@@ -31,6 +31,71 @@ hr.div { border:none; border-top:1px solid #1e1e1e; }
   letter-spacing:2px; cursor:pointer; width:100%; text-transform:uppercase; transition:background .1s;
 }
 .upload-btn:hover { background:#e0e0e0; }
+.upload-btn-sec {
+  background:#1a1a1a; color:#666; border:1px solid #2a2a2a; margin-top:5px;
+}
+.upload-btn-sec:hover { background:#2a2a2a; color:#ddd; }
+
+/* ── New Canvas modal ────────────────────────────────────────────── */
+#nc-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.7);
+  display:flex; align-items:center; justify-content:center; z-index:500;
+}
+#nc-modal {
+  background:#161616; border:1px solid #2a2a2a;
+  padding:24px; width:300px; font-family:'Courier New',monospace;
+}
+.nc-title {
+  font-size:10px; letter-spacing:3px; color:#fff;
+  text-transform:uppercase; margin-bottom:18px;
+}
+.nc-section-label {
+  font-size:8px; letter-spacing:2px; color:#484848;
+  text-transform:uppercase; margin-bottom:7px;
+}
+.nc-dims {
+  display:flex; align-items:center; gap:7px; margin-bottom:8px;
+}
+.nc-dims input[type=number] {
+  flex:1; width:0; background:#1a1a1a; border:1px solid #2a2a2a; color:#fff;
+  font-family:'Courier New',monospace; font-size:13px;
+  padding:6px 8px; outline:none; text-align:center;
+  -moz-appearance:textfield;
+}
+.nc-dims input[type=number]::-webkit-inner-spin-button { -webkit-appearance:none; }
+.nc-dims input[type=number]:focus { border-color:#fff; }
+.nc-x { color:#444; font-size:13px; }
+.nc-unit { color:#333; font-size:9px; letter-spacing:1px; }
+.nc-bg {
+  display:flex; align-items:center; gap:7px; margin-bottom:20px;
+}
+#ncBgPicker {
+  -webkit-appearance:none; width:28px; height:28px; flex-shrink:0;
+  padding:0; border:1px solid #2a2a2a; background:none; cursor:pointer;
+}
+#ncBgPicker::-webkit-color-swatch-wrapper { padding:2px; }
+#ncBgPicker::-webkit-color-swatch { border:none; }
+.nc-hash { font-size:11px; color:#444; }
+#ncBgHex {
+  flex:1; background:#1a1a1a; border:1px solid #2a2a2a; color:#fff;
+  font-family:'Courier New',monospace; font-size:10px;
+  padding:4px 6px; outline:none; text-transform:uppercase; letter-spacing:1px;
+}
+#ncBgHex:focus { border-color:#fff; }
+.nc-actions { display:flex; gap:6px; }
+#ncCancel {
+  flex:1; background:transparent; border:1px solid #2a2a2a; color:#555;
+  padding:9px; font-family:'Courier New',monospace; font-size:9px;
+  letter-spacing:1px; cursor:pointer; text-transform:uppercase; transition:all .1s;
+}
+#ncCancel:hover { border-color:#666; color:#ccc; }
+#ncCreate {
+  flex:2; background:#fff; border:1px solid #fff; color:#000;
+  padding:9px; font-family:'Courier New',monospace; font-size:9px;
+  letter-spacing:2px; cursor:pointer; text-transform:uppercase;
+  font-weight:bold; transition:background .1s;
+}
+#ncCreate:hover { background:#e0e0e0; }
 
 /* Tabs */
 .tab-row { display:flex; gap:4px; margin-bottom:7px; }
